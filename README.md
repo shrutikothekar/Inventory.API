@@ -86,3 +86,16 @@ Why not LINQ for bulk
 Why SqlBulkCopy is faster
 When to use EF vs ADO.NET
 
+🔁 QUICK ALIGNMENT
+Controller
+   ↓
+Service (optional)
+   ↓
+IRepository (interface)
+   ↓
+Repository (implementation)
+   ↓
+BaseRepository (connection handling)
+   ↓
+SQL (SP / Views)
+
