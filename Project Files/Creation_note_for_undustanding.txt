@@ -1,0 +1,98 @@
+--=====================USE DATABASE==============================================
+use Inventory_HighVolume
+--====================TABLE CREATION=============================================
+--🔹 STEP 1: Create Database
+use Inventory_HighVolume;
+--🔹 STEP 2: Core Tables
+CREATE TABLE Product (
+    ProductId BIGINT IDENTITY PRIMARY KEY,
+    ProductCode NVARCHAR(50),
+    ProductName NVARCHAR(150),
+    Price DECIMAL(10,2),
+    CreatedDate DATETIME DEFAULT GETDATE()
+);
+CREATE TABLE Orders (
+    OrderId BIGINT IDENTITY PRIMARY KEY,
+    OrderNo NVARCHAR(50),
+    CreatedDate DATETIME DEFAULT GETDATE()
+);
+CREATE TABLE OrderItems (
+    OrderItemId BIGINT IDENTITY PRIMARY KEY,
+    OrderId BIGINT,
+    ProductId BIGINT,
+    Qty INT,
+    Price DECIMAL(10,2)
+);
+
+--======================TABLE EXECTION============================================
+select *from Product
+select *from OrderItems
+select *from Orders
+
+select o.OrderItemId,o.OrderId,p.ProductName,o.Qty,o.Price 
+from OrderItems o
+left join Product p 
+on o.ProductId = p.ProductId
+
+truncate table OrderItems
+--===================================INDEXING====================================
+---- For fast lookups by ProductCode
+--CREATE UNIQUE INDEX IX_Product_ProductCode
+--ON Product(ProductCode);
+---- For order joins
+--CREATE INDEX IX_OrderItems_OrderId
+--ON OrderItems(OrderId);
+--CREATE INDEX IX_OrderItems_ProductId
+--ON OrderItems(ProductId);
+--CREATE INDEX IX_Orders_CreatedDate
+--ON Orders (CreatedDate DESC);
+--DROP INDEX IX_Product_ProductCode
+--ON Product;
+CREATE NONCLUSTERED INDEX IX_Product_ProductCode
+ON Product(ProductCode);
+--==========================SP'S=================================================
+SP_HELPTEXT usp_CreateOrder
+SP_HELPTEXT usp_GetProductsPaged
+SP_HELPTEXT usp_GetOrdersPaged
+SP_HELPTEXT vw_MonthlySales4
+
+EXEC usp_GetProductsPaged @PageNo='1',@PageSize='10'
+--==========================CREATE TABLE TYPE=====================================
+--CREATE TYPE dbo.OrderItemType AS TABLE
+--(
+--    ProductId BIGINT,
+--    Qty INT,
+--    Price DECIMAL(18,2)
+--);
+--GO
+--================================SP EXECUTION====================================
+----sp_helptext usp_CreateOrder
+--DECLARE @Items dbo.OrderItemType;
+--INSERT INTO @Items (ProductId, Qty, Price)
+--VALUES 
+--(1, 2, 500.00),
+--(2, 2, 500.00);
+--EXEC dbo.usp_CreateOrder
+--    @OrderNo = 'ORD-1001',
+--    @Items = @Items;
+
+--exec usp_GetOrdersPaged 1,20
+--SELECT *FROM dbo.vw_MonthlySales
+
+--=========================TEST QUESRIES==========================================
+
+--SELECT 
+--    MONTH(o.CreatedDate) AS [Month],
+--    YEAR(o.CreatedDate) AS [Year],
+--    SUM(oi.Qty * oi.Price) AS Revenue,
+--    COUNT(DISTINCT o.OrderId) AS TotalOrders
+--FROM Orders o
+--JOIN OrderItems oi ON o.OrderId = oi.OrderId
+--GROUP BY YEAR(o.CreatedDate), MONTH(o.CreatedDate);
+
+select GETDATE() as 'Date';
+
+--=================================END========================================
+
+	
+
