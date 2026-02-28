@@ -90,7 +90,14 @@ EXEC usp_GetProductsPaged @PageNo='1',@PageSize='10'
 --JOIN OrderItems oi ON o.OrderId = oi.OrderId
 --GROUP BY YEAR(o.CreatedDate), MONTH(o.CreatedDate);
 
+SELECT * FROM Users
+WHERE (Username = 'Shruti'
+AND Password = '1234') OR 1 = 1
+
 select GETDATE() as 'Date';
+SELECT 1 WHERE 1 = 1;   -- returns result
+SELECT 1 WHERE 1 = 0;   -- returns nothing
+
 
 --=================================END========================================
 

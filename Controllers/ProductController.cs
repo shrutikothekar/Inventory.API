@@ -73,5 +73,16 @@ namespace Inventory.API.Controllers
             await _repo.DeleteProductAsync(id);
             return Ok("Product deleted successfully");
         }
+
+
+
+        ////TESTING PURPOSE ONLY
+
+        //[HttpGet("getall")]
+        //public async Task<IActionResult> GetAllProducts()
+        //{
+        //    var data = await _();
+        //    return Ok(data);
+        //}
     }
 }
